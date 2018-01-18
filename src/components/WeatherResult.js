@@ -1,16 +1,10 @@
 import React from 'react';
 
-const weatherResult = ({weather}) => {
-  let location, temperature, conditions = null;
-  if (weather) {
-    location = weather.name;
-    temperature = weather.main.temp;
-    conditions = weather.weather[0].main;
-  }
+const weatherResult = ({location, temperature, conditions}) => {
   return (
     <div>
       <p>{location}</p>
-      <p>{temperature}</p>
+      <p>{temperature} F</p>
       <p>{conditions}</p>
     </div>
   );
