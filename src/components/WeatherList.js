@@ -1,10 +1,10 @@
 import React from 'react';
 import WeatherResult from './WeatherResult';
 
-const weatherList = ({results}) => {
-  const weatherResults = results.map((r, index) => {
+const weatherList = (props) => {
+  const weatherResults = props.results.map((r, index) => {
     return (
-      <WeatherResult key={index} {...r}/>
+      <WeatherResult key={index} {...r} {...props}/>
     );
   });
   return (
