@@ -1,3 +1,16 @@
 .App {
   text-align: center;
+  background: rgba(50,50,150,0.3);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+body {
+  /*https://css-tricks.com/perfect-full-page-background-image/ */
+  background: url(assets/images/default.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }

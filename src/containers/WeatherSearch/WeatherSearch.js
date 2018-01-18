@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Aux from './../../hoc/Auxx/Auxx';
 import './WeatherSearch.css';
 import axios from 'axios';
 import {createWeatherObj} from './../../shared/utility';
@@ -61,7 +62,7 @@ class WeatherSearch extends Component {
   }
   render(){
     return(
-      <div>
+      <Aux>
         <form onSubmit={this.onFormSubmit}>
           <input
               className="weather-input" 
@@ -71,8 +72,10 @@ class WeatherSearch extends Component {
               onChange={this.onInputChange}
             />
         </form>
-        <button onClick={this.currentLocation}>Use current location</button>
-      </div>
+        <button onClick={this.currentLocation} style={{marginRight: '30px'}}>
+          Use current location
+        </button>
+      </Aux>
     );
   }
 };

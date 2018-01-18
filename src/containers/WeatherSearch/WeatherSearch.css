@@ -1,7 +1,15 @@
 .weather-input {
+  border-radius:5px;
+  box-shadow: 0px 0px 1px black;
   padding: 5px;
 	font-size: 16px;
   color: #555;
   width: 45%;
   outline: none;
+  margin-bottom: 15px;
+}
+
+button {
+  background: none;
+  outline: none; /*gets rid of annoying blue outline when button clicked on*/
 }
