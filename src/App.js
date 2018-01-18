@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
-import WeatherList from './components/WeatherList';
-import WeatherSearch from './containers/WeatherSearch';
+import WeatherList from './components/WeatherList/WeatherList';
+import WeatherSearch from './containers/WeatherSearch/WeatherSearch';
+import ToggleButton from './components/ToggleButton/ToggleButton';
+import Header from './components/Header/Header';
 import './App.css';
 
 class App extends Component {
@@ -32,14 +34,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>Local Weather App</h1>
-        <p>Enter in a city of your choice or use your current location.</p>
+        <Header />
         <WeatherSearch addResult={this.addResult}/>
+        <ToggleButton toggleFC={this.toggleFC}/>
         <WeatherList 
           results={this.state.results} 
           celcius={this.state.celcius}
         />
-        <button onClick={this.toggleFC}>Toggle F/C</button>
       </div>
     );
   }

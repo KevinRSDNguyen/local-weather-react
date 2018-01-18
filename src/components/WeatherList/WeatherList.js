@@ -1,5 +1,5 @@
 import React from 'react';
-import WeatherResult from './WeatherResult';
+import WeatherResult from './../WeatherResult/WeatherResult';
 
 const weatherList = (props) => {
   const weatherResults = props.results.map((r, index) => {
