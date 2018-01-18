@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import './WeatherSearch.css';
 import axios from 'axios';
+import {createWeatherObj} from './../../shared/utility';
 
 const apiKey = '78981c43e4b2ded34b065dfb22405f75';
 
@@ -9,7 +11,8 @@ class WeatherSearch extends Component {
     weatherData: {
       location: null,
       temperature: null,
-      conditions: null
+      conditions: null,
+      icon: null
     }
   };
   onInputChange = (event) => {
@@ -20,10 +23,7 @@ class WeatherSearch extends Component {
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=imperial&appid=${apiKey}`;
     axios.get(url)
       .then(({data}) => {
-        const updatedWeatherData = {...this.state.weatherData};
-        updatedWeatherData.location = data.name;
-        updatedWeatherData.temperature = data.main.temp;
-        updatedWeatherData.conditions = data.weather[0].main;
+        const updatedWeatherData = createWeatherObj(this.state.weatherData, data);
         this.setState((prevState) => {
           return {weatherData: updatedWeatherData};
         }, () => {
@@ -46,10 +46,7 @@ class WeatherSearch extends Component {
       const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
       axios.get(url)
         .then(({data}) => {
-          const updatedWeatherData = {...this.state.weatherData};
-          updatedWeatherData.location = data.name;
-          updatedWeatherData.temperature = data.main.temp;
-          updatedWeatherData.conditions = data.weather[0].main;
+          const updatedWeatherData = createWeatherObj(this.state.weatherData, data);
           this.setState((prevState) => {
             return {weatherData: updatedWeatherData};
           }, () => {
@@ -66,7 +63,8 @@ class WeatherSearch extends Component {
     return(
       <div>
         <form onSubmit={this.onFormSubmit}>
-          <input 
+          <input
+              className="weather-input" 
               type="text"
               autoFocus
               value={this.state.input}

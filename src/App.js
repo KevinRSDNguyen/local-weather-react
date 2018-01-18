@@ -37,6 +37,7 @@ class App extends Component {
         <Header />
         <WeatherSearch addResult={this.addResult}/>
         <ToggleButton toggleFC={this.toggleFC}/>
+        <hr />
         <WeatherList 
           results={this.state.results} 
           celcius={this.state.celcius}
