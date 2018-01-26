@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Aux from './../../hoc/Auxx/Auxx';
 import './WeatherSearch.css';
 import axios from 'axios';
-// import { createWeatherObj } from './../../shared/utility';
 
 const apiKey = '78981c43e4b2ded34b065dfb22405f75';
 
@@ -19,20 +18,20 @@ class WeatherSearch extends Component {
   onInputChange = (event) => {
     this.setState({ input: event.target.value })
   }
-  createWeatherObj = (oldObj, data) => {
-    const updatedWeatherData = { ...oldObj };
-    updatedWeatherData.location = data.name;
-    updatedWeatherData.temperature = data.main.temp;
-    updatedWeatherData.conditions = data.weather[0].main;
-    updatedWeatherData.icon = data.weather[0].icon;
-    return updatedWeatherData;
+  createWeatherObj = ({name, main, weather}) => {
+    let weatherObj = {};
+    weatherObj.location = name;
+    weatherObj.temperature = main.temp;
+    weatherObj.conditions = weather[0].main;
+    weatherObj.icon = weather[0].icon;
+    return weatherObj;
   }
   onFormSubmit = (event) => {
     event.preventDefault();
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=imperial&appid=${apiKey}`;
     axios.get(url)
       .then(({ data }) => {
-        const updatedWeatherData = this.createWeatherObj(this.state.weatherData, data);
+        const updatedWeatherData = this.createWeatherObj(data);
         this.setState((prevState) => {
           return { weatherData: updatedWeatherData };
         }, () => {
@@ -55,7 +54,7 @@ class WeatherSearch extends Component {
       const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
       axios.get(url)
         .then(({ data }) => {
-          const updatedWeatherData = this.createWeatherObj(this.state.weatherData, data);
+          const updatedWeatherData = this.createWeatherObj(data);
           this.setState((prevState) => {
             return { weatherData: updatedWeatherData };
           }, () => {
