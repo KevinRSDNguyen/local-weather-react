@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Aux from './../../hoc/Auxx/Auxx';
 import './WeatherSearch.css';
 import axios from 'axios';
-import {createWeatherObj} from './../../shared/utility';
+// import { createWeatherObj } from './../../shared/utility';
 
 const apiKey = '78981c43e4b2ded34b065dfb22405f75';
 
@@ -17,19 +17,27 @@ class WeatherSearch extends Component {
     }
   };
   onInputChange = (event) => {
-    this.setState({input: event.target.value})
+    this.setState({ input: event.target.value })
+  }
+  createWeatherObj = (oldObj, data) => {
+    const updatedWeatherData = { ...oldObj };
+    updatedWeatherData.location = data.name;
+    updatedWeatherData.temperature = data.main.temp;
+    updatedWeatherData.conditions = data.weather[0].main;
+    updatedWeatherData.icon = data.weather[0].icon;
+    return updatedWeatherData;
   }
   onFormSubmit = (event) => {
     event.preventDefault();
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=imperial&appid=${apiKey}`;
     axios.get(url)
-      .then(({data}) => {
-        const updatedWeatherData = createWeatherObj(this.state.weatherData, data);
+      .then(({ data }) => {
+        const updatedWeatherData = this.createWeatherObj(this.state.weatherData, data);
         this.setState((prevState) => {
-          return {weatherData: updatedWeatherData};
+          return { weatherData: updatedWeatherData };
         }, () => {
           this.props.addResult(this.state.weatherData);
-          this.setState({weatherData: null, input: ''});
+          this.setState({ weatherData: null, input: '' });
         });
       })
       .catch(error => {
@@ -37,22 +45,22 @@ class WeatherSearch extends Component {
       });
   }
   currentLocation = () => {
-    if (!navigator.geolocation){
+    if (!navigator.geolocation) {
       return alert('Geolocation not supported by your browser');
     }
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const long = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      const lat = coords.latitude;
+      const long = coords.longitude;
       const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
       axios.get(url)
-        .then(({data}) => {
-          const updatedWeatherData = createWeatherObj(this.state.weatherData, data);
+        .then(({ data }) => {
+          const updatedWeatherData = this.createWeatherObj(this.state.weatherData, data);
           this.setState((prevState) => {
-            return {weatherData: updatedWeatherData};
+            return { weatherData: updatedWeatherData };
           }, () => {
             this.props.addResult(this.state.weatherData);
-            this.setState({weatherData: null})
+            this.setState({ weatherData: null })
           });
         });
 
@@ -60,19 +68,19 @@ class WeatherSearch extends Component {
       alert('Unable to fetch location');
     });
   }
-  render(){
-    return(
+  render() {
+    return (
       <Aux>
         <form onSubmit={this.onFormSubmit}>
           <input
-              className="weather-input" 
-              type="text"
-              autoFocus
-              value={this.state.input}
-              onChange={this.onInputChange}
-            />
+            className="weather-input"
+            type="text"
+            autoFocus
+            value={this.state.input}
+            onChange={this.onInputChange}
+          />
         </form>
-        <button onClick={this.currentLocation} style={{marginRight: '30px'}}>
+        <button onClick={this.currentLocation} style={{ marginRight: '30px' }}>
           Use current location
         </button>
       </Aux>
