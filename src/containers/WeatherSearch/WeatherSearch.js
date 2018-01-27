@@ -28,7 +28,7 @@ class WeatherSearch extends Component {
   }
   onFormSubmit = (event) => {
     event.preventDefault();
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=imperial&appid=${apiKey}`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=imperial&appid=${apiKey}`;
     axios.get(url)
       .then(({ data }) => {
         const updatedWeatherData = this.createWeatherObj(data);
