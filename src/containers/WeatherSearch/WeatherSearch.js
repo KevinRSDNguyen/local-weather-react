@@ -18,7 +18,7 @@ class WeatherSearch extends Component {
   onInputChange = (event) => {
     this.setState({ input: event.target.value })
   }
-  createWeatherObj = ({name, main, weather}) => {
+  createWeatherObj = ({ name, main, weather }) => {
     let weatherObj = {};
     weatherObj.location = name;
     weatherObj.temperature = main.temp;
@@ -44,28 +44,25 @@ class WeatherSearch extends Component {
       });
   }
   currentLocation = () => {
-    if (!navigator.geolocation) {
-      return alert('Geolocation not supported by your browser');
-    }
-
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
-      const lat = coords.latitude;
-      const long = coords.longitude;
-      const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
-      axios.get(url)
-        .then(({ data }) => {
-          const updatedWeatherData = this.createWeatherObj(data);
-          this.setState((prevState) => {
-            return { weatherData: updatedWeatherData };
-          }, () => {
-            this.props.addResult(this.state.weatherData);
-            this.setState({ weatherData: null })
-          });
+    axios.get('https://ipinfo.io/')
+      .then(({ data }) => {
+        const LatLong = data.loc.split(',').map(coord => {
+          return Number(coord);
         });
-
-    }, function () { //2nd callback for if error occurs
-      alert('Unable to fetch location');
-    });
+        const lat = LatLong[0];
+        const long = LatLong[1];
+        const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
+        axios.get(url)
+          .then(({ data }) => {
+            const updatedWeatherData = this.createWeatherObj(data);
+            this.setState((prevState) => {
+              return { weatherData: updatedWeatherData };
+            }, () => {
+              this.props.addResult(this.state.weatherData);
+              this.setState({ weatherData: null })
+            });
+          });
+      });
   }
   render() {
     return (
