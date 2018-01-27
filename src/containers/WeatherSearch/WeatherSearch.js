@@ -51,7 +51,7 @@ class WeatherSearch extends Component {
         });
         const lat = LatLong[0];
         const long = LatLong[1];
-        const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
         axios.get(url)
           .then(({ data }) => {
             const updatedWeatherData = this.createWeatherObj(data);
