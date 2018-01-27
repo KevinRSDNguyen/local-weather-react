@@ -46,22 +46,22 @@ class WeatherSearch extends Component {
   currentLocation = () => {
     axios.get('https://ipinfo.io/')
       .then(({ data }) => {
+        //API gives us co-ords as string, this will parse them to Number
         const LatLong = data.loc.split(',').map(coord => {
           return Number(coord);
         });
-        const lat = LatLong[0];
-        const long = LatLong[1];
+        const [lat, long] = LatLong;
         const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=${apiKey}`;
-        axios.get(url)
-          .then(({ data }) => {
-            const updatedWeatherData = this.createWeatherObj(data);
-            this.setState((prevState) => {
-              return { weatherData: updatedWeatherData };
-            }, () => {
-              this.props.addResult(this.state.weatherData);
-              this.setState({ weatherData: null })
-            });
-          });
+        return axios.get(url);
+      })
+      .then(({ data }) => {
+        const updatedWeatherData = this.createWeatherObj(data);
+        this.setState((prevState) => {
+          return { weatherData: updatedWeatherData };
+        }, () => {
+          this.props.addResult(this.state.weatherData);
+          this.setState({ weatherData: null })
+        });
       });
   }
   render() {
