@@ -1,48 +1,58 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import WeatherList from './components/WeatherList/WeatherList';
-import WeatherSearch from './containers/WeatherSearch/WeatherSearch';
-import ToggleButton from './components/ToggleButton/ToggleButton';
-import Header from './components/Header/Header';
-import './App.css';
+import WeatherList from "./components/WeatherList/WeatherList";
+import WeatherSearch from "./containers/WeatherSearch/WeatherSearch";
+import "./App.css";
 
 class App extends Component {
   state = {
     results: [],
     celcius: false
   };
-  addResult = (result) => {
-    this.setState((prevState) => {
+  addResult = result => {
+    this.setState(prevState => {
       const duplicateCity = prevState.results.find(r => {
-        return r.location === result.location;
+        return r.location.city === result.location.city;
       });
       //Only adds weather data for city if it has not been looked up before
-      if (!duplicateCity) { 
+      if (!duplicateCity) {
         return {
           results: prevState.results.concat(result)
         };
       }
     });
-  }
+  };
   toggleFC = () => {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return {
         celcius: !prevState.celcius
       };
     });
-  }
+  };
   render() {
     return (
-      <div className="App">
-        <Header />
-        <WeatherSearch addResult={this.addResult}/>
-        <ToggleButton toggleFC={this.toggleFC}/>
-        <hr />
-        <WeatherList 
-          results={this.state.results} 
-          celcius={this.state.celcius}
-        />
-      </div>
+      <section>
+        <div className="dark-overlay">
+          <div className="container">
+            <div className="row p-3">
+              <div className="col-md-9 m-auto">
+                <h1 className="display-4 text-center text-light">
+                  Local Weather App
+                </h1>
+                <WeatherSearch
+                  addResult={this.addResult}
+                  toggleFC={this.toggleFC}
+                />
+              </div>
+            </div>
+            <hr />
+            <WeatherList
+              results={this.state.results}
+              celcius={this.state.celcius}
+            />
+          </div>
+        </div>
+      </section>
     );
   }
 }

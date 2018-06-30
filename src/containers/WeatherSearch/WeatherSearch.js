@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
-import Aux from './../../hoc/Auxx/Auxx';
-import './WeatherSearch.css';
-import axios from 'axios';
+import React, { Component } from "react";
+import Aux from "./../../hoc/Auxx/Auxx";
+import axios from "axios";
 
-const apiKey = '78981c43e4b2ded34b065dfb22405f75';
+const apiKey = "78981c43e4b2ded34b065dfb22405f75";
 
 class WeatherSearch extends Component {
   state = {
-    input: '',
+    input: "",
     weatherData: {
       location: null,
       temperature: null,
@@ -15,39 +14,46 @@ class WeatherSearch extends Component {
       icon: null
     }
   };
-  onInputChange = (event) => {
-    this.setState({ input: event.target.value })
-  }
-  createWeatherObj = ({ name, main, weather }) => {
+  onInputChange = event => {
+    this.setState({ input: event.target.value });
+  };
+  createWeatherObj = ({ name: city, main, weather, sys }) => {
     let weatherObj = {};
-    weatherObj.location = name;
+    weatherObj.location = { city, country: sys.country };
     weatherObj.temperature = main.temp;
     weatherObj.conditions = weather[0].main;
     weatherObj.icon = weather[0].icon;
     return weatherObj;
-  }
-  onFormSubmit = (event) => {
+  };
+  onFormSubmit = event => {
     event.preventDefault();
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=imperial&appid=${apiKey}`;
-    axios.get(url)
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${
+      this.state.input
+    }&units=imperial&appid=${apiKey}`;
+    axios
+      .get(url)
       .then(({ data }) => {
         const updatedWeatherData = this.createWeatherObj(data);
-        this.setState((prevState) => {
-          return { weatherData: updatedWeatherData };
-        }, () => {
-          this.props.addResult(this.state.weatherData);
-          this.setState({ weatherData: null, input: '' });
-        });
+        this.setState(
+          prevState => {
+            return { weatherData: updatedWeatherData };
+          },
+          () => {
+            this.props.addResult(this.state.weatherData);
+            this.setState({ weatherData: null, input: "" });
+          }
+        );
       })
       .catch(error => {
-        alert('That city could not be found');
+        alert("That city could not be found");
       });
-  }
+  };
   currentLocation = () => {
-    axios.get('https://ipinfo.io/')
+    axios
+      .get("https://ipinfo.io/")
       .then(({ data }) => {
         //API gives us co-ords as string, this will parse them to Number
-        const LatLong = data.loc.split(',').map(coord => {
+        const LatLong = data.loc.split(",").map(coord => {
           return Number(coord);
         });
         const [lat, long] = LatLong;
@@ -56,32 +62,47 @@ class WeatherSearch extends Component {
       })
       .then(({ data }) => {
         const updatedWeatherData = this.createWeatherObj(data);
-        this.setState((prevState) => {
-          return { weatherData: updatedWeatherData };
-        }, () => {
-          this.props.addResult(this.state.weatherData);
-          this.setState({ weatherData: null })
-        });
+        this.setState(
+          prevState => {
+            return { weatherData: updatedWeatherData };
+          },
+          () => {
+            this.props.addResult(this.state.weatherData);
+            this.setState({ weatherData: null });
+          }
+        );
       });
-  }
+  };
   render() {
     return (
       <Aux>
-        <form onSubmit={this.onFormSubmit}>
+        <form onSubmit={this.onFormSubmit} className="mb-3">
           <input
-            className="weather-input"
+            className="form-control"
             type="text"
             autoFocus
             value={this.state.input}
             onChange={this.onInputChange}
+            placeholder="Enter a city..."
           />
         </form>
-        <button onClick={this.currentLocation} style={{ marginRight: '30px' }}>
-          Use current location
-        </button>
+        <div className="d-flex justify-content-around">
+          <button
+            onClick={this.currentLocation}
+            className="btn btn-secondary btn-sm"
+          >
+            <i className="fas fa-location-arrow" /> Use current location
+          </button>
+          <button
+            onClick={this.props.toggleFC}
+            className="btn btn-secondary btn-sm"
+          >
+            <i className="fas fa-toggle-on" /> Toggle F/C
+          </button>
+        </div>
       </Aux>
     );
   }
-};
+}
 
 export default WeatherSearch;
